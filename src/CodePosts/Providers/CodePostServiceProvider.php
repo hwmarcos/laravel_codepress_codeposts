@@ -1,21 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: helder
- * Date: 03/07/2016
- * Time: 19:27
- */
 
 namespace CodePress\CodePosts\Providers;
 
+use CodePress\CodePosts\Repository\PostRepositoryEloquent;
+use CodePress\CodePosts\Repository\PostRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
+use Ktquez\Tinymce\TinymceServiceProvider;
 
-class CodeCategoryServiceProvider extends ServiceProvider
+class CodePostServiceProvider extends ServiceProvider
 {
 
     public function boot()
     {
-        $this->publishes([__DIR__ . '/../../resources/migrations/' => base_path('database/migrations')], 'migartions');
+        $this->publishes([__DIR__ . '/../../resources/migrations/' => base_path('database/migrations')], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views/codepost/', 'codepost');
         require(__DIR__ . '/../../routes.php');
     }
@@ -27,5 +24,7 @@ class CodeCategoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(PostRepositoryInterface::class, PostRepositoryEloquent::class);
+        $this->app->register(TinymceServiceProvider::class);
     }
 }

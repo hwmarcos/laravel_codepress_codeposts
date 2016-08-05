@@ -8,7 +8,8 @@
     "illuminate/database": "~5.2",
     "illuminate/validation": "~5.2",
     "cviebrock/eloquent-sluggable": "^3.0",
-    "laravelcodepress/code-database": "0.0.1"
+    "laravelcodepress/code-database": "0.0.1",
+    "codeedu/laravel-tinymce": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.0",
@@ -19,5 +20,11 @@
     "psr-4": {
       "CodePress\\CodePosts\\": "src/CodePosts/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/codeedu/laravel-tinymce.git"
+    }
+  ]
 }

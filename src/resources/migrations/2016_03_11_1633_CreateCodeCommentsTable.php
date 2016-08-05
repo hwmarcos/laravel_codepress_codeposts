@@ -3,21 +3,22 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCodePostsTable
+class CreateCodeCommentsTable
 {
     public function up()
     {
-        Schema::create('codepress_posts', function (Blueprint $table) {
+        Schema::create('codepress_comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
             $table->text('content');
+            $table->integer('post_id');
+            $table->foreign('post_id')->references('id')->on('codepress_posts');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::drop('codepress_posts');
+        Schema::drop('codepress_comments');
     }
 
 }

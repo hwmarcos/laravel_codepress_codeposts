@@ -2,17 +2,15 @@
 
 namespace CodePress\CodePosts\Models;
 
-use CodePress\CodeCategory\Models\Category;
-use CodePress\CodeTag\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Comment extends Model
 {
 
-    protected $table = 'codepress_posts';
+    protected $table = 'codepress_comments';
     private $validator;
 
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['content', 'post_id'];
 
     public function setValidator($validator)
     {
@@ -29,7 +27,6 @@ class Post extends Model
         $validator = $this->validator;
         $validator->setRules(
             [
-                'title' => 'required|max:255',
                 'content' => 'required'
             ]
         );
@@ -41,24 +38,9 @@ class Post extends Model
         return true;
     }
 
-    public function taggable()
+    public function post()
     {
-        return $this->morphTo();
-    }
-
-    public function categories()
-    {
-        return $this->morphToMany(Category::class, 'categorizable', 'codepress_categorizables');
-    }
-
-    public function tags()
-    {
-        return $this->morphToMany(Tag::class, 'taggable', 'codepress_taggables');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
+        return $this->belongsTo(Post::class);
     }
 
 }
