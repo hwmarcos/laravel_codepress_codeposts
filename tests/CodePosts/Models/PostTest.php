@@ -85,4 +85,71 @@ class PostTest extends AbstractTestCase
         $this->assertEquals('comment content 2', $comments[1]->content);
     }
 
+    public function test_can_soft_delete()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        $post->delete();
+        $this->assertTrue($post->trashed());
+        $this->assertCount(0, $post->all());
+    }
+
+    public function test_can_get_rows_deleted()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        Post::create([
+            'title' => 'post Test2',
+            'content' => 'post content2'
+        ]);
+        $post->delete();
+        $post = Post::onlyTrashed()->get();
+        $this->assertEquals(1, $post[0]->id);
+        $this->assertEquals('post Test', $post[0]->title);
+    }
+
+    public function test_can_get_rows_deleted_and_activated()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        Post::create([
+            'title' => 'post Test2',
+            'content' => 'post content2'
+        ]);
+        $post->delete();
+        $posts = Post::withTrashed()->get();
+        $this->assertCount(2, $posts);
+        $this->assertEquals(1, $posts[0]->id);
+        $this->assertEquals('post Test', $posts[0]->title);
+    }
+
+    public function test_can_force_delete()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        $post->forceDelete();
+        $this->assertCount(0, $post->all());
+    }
+
+    public function test_can_restore_rows_from_deleted()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        $post->delete();
+        $post->restore();
+        $post->find(1);
+        $this->assertEquals(1, $post->id);
+        $this->assertEquals('post Test', $post->title);
+    }
+
 }

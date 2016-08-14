@@ -11,4 +11,9 @@ class PostRepositoryEloquent extends AbstractRepository implements PostRepositor
     {
         return Post::class;
     }
+
+    public function trashed(){
+        return Post::onlyTrashed()->get();
+    }
+
 }

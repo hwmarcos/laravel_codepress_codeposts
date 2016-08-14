@@ -3,11 +3,15 @@
 namespace CodePress\CodePosts\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
 
+    use SoftDeletes;
+
     protected $table = 'codepress_comments';
+    protected $date = ['deleted_at'];
     private $validator;
 
     protected $fillable = ['content', 'post_id'];
@@ -40,7 +44,7 @@ class Comment extends Model
 
     public function post()
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class)->withTrashed();
     }
 
 }

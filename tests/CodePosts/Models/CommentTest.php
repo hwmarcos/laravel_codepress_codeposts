@@ -89,4 +89,57 @@ class CommentTest extends AbstractTestCase
         $this->assertFalse($comment->isValid());
     }
 
+    public function test_can_force_all_from_relationship()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        Comment::create([
+            'content' => 'comment content1',
+            'post_id' => $post->id,
+        ]);
+        Comment::create([
+            'content' => 'comment content2',
+            'post_id' => $post->id,
+        ]);
+        $post->comments()->forceDelete();
+        $this->assertCount(0, $post->comments()->get());
+    }
+
+    public function test_can_restore_deleted_all_from_relationship()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        $comment1 = Comment::create([
+            'content' => 'comment content1',
+            'post_id' => $post->id,
+        ]);
+        $comment2 = Comment::create([
+            'content' => 'comment content2',
+            'post_id' => $post->id,
+        ]);
+        $comment1->delete();
+        $comment2->delete();
+        $post->comments()->restore();
+        $this->assertCount(2, $post->comments()->get());
+    }
+
+    public function test_can_find_a_model_deleted_from_relationship()
+    {
+        $post = Post::create([
+            'title' => 'post Test',
+            'content' => 'post content'
+        ]);
+        Comment::create([
+            'content' => 'comment content1',
+            'post_id' => $post->id,
+        ]);
+        $post->delete();
+        $comment = Comment::find(1);
+        $this->assertEquals('post Test', $comment->post->title);
+    }
+
 }

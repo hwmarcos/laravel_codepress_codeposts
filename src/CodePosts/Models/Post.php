@@ -5,12 +5,17 @@ namespace CodePress\CodePosts\Models;
 use CodePress\CodeCategory\Models\Category;
 use CodePress\CodeTag\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Post extends Model
 {
 
+    use SoftDeletes;
+
     protected $table = 'codepress_posts';
     private $validator;
+    protected $dates = ['deleted_at'];
 
     protected $fillable = ['title', 'content'];
 
